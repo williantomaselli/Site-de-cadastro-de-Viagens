@@ -1,0 +1,76 @@
+.poppins {
+    font-family: "Poppins", Arial, Helvetica, sans-serif;
+  }
+  
+  .lato {
+    font-family: "Lato", Arial, Helvetica, sans-serif;
+  }
+  
+  .montserrat {
+    font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  }
+  
+  /* Transições */
+  .transition-1 { transition: 0.1s ease; }
+  .transition-2 { transition: 0.2s ease; }
+  .transition-3 { transition: 0.3s ease; }
+  .transition-4 { transition: 0.4s ease; }
+  .transition-5 { transition: 0.5s ease; }
+  
+  .hover:hover { transform: scale(1.1); }
+  .nav-hover:hover { transform: scaleY(1.1); }
+  
+  /* Banner Hero */
+  .banner-hero {
+    position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+  }
+  
+  .banner-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.062);
+    transition: background 0.3s ease;
+    z-index: 1;
+  }
+  
+  .banner-hero:hover::before {
+    background: rgba(0, 0, 0, 0.247);
+  }
+  
+  .banner-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Animações para Barba.js */
+  
+  /* Fade in: inicia com opacidade 0 e anima para 1 */
+  .fade-in {
+    opacity: 0;
+    animation: fadeInAnimation 1s forwards;
+  }
+  
+  @keyframes fadeInAnimation {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Fade out: inicia com opacidade 1 e anima para 0 */
+  .fade-out {
+    opacity: 1;
+    animation: fadeOutAnimation 1s forwards;
+  }
+  
+  @keyframes fadeOutAnimation {
+    to {
+      opacity: 0;
+    }
+  }
+  

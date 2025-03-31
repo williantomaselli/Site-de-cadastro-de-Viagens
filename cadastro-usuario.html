@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário | Guara Viagens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/styles.css">
+  <link rel="shortcut icon" href="./Assets/g (1).png" type="image/x-icon">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-card {
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+
+
+        .register-card .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+        }
+
+        .register-card .card-header {
+            background-color: rgb(194, 149, 53);
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            text-align: center;
+            border: none;
+        }
+
+        .register-card .card-body {
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body class="w-100" style="display: flex; flex-direction: column; 
+  background: url(./Assets/bg.jfif) center center / cover no-repeat; 
+  min-height: 100vh;">
+    <section class="container my-5">
+        <div class="register-card">
+            <div class="card">
+                <div class="card-header shadow">
+                    <h3>Cadastro de Usuário</h3>
+                </div>
+                <div class="card-body">
+                    <form id="register-form">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nome de Usuário</label>
+                            <input type="text" class="form-control" id="username"
+                                placeholder="Digite seu nome de usuário" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="password" placeholder="Digite sua senha"
+                                required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        </div>
+                    </form>
+                    <p class="mt-3 text-center">Já tem uma conta? <a href="login.html">Acesse já</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = { username, password };
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert(data.message);
+                        localStorage.setItem('userId', data.userId);
+                        localStorage.setItem('username', username);
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao cadastrar usuário.');
+                });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

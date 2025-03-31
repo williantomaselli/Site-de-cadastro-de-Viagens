@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guara Viagens | Início</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/styles.css">
+
+  <!-- FAVICON -->
+   <link rel="shortcut icon" href="./Assets/g.png" type="image/x-icon">
+</head>
+<body class="w-100">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(78,86,131); height: 7vh;">
+    <div class="container-fluid">
+      <a class="navbar-brand fs-3" style="margin-left: 3vh;" href="index.html">Guara Viagens</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" style="margin-right: 2vh; font-size: 1.2rem;" href="index.html">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="margin-right: 2vh; font-size: 1.2rem;" href="cadastro-viagem.html">Cadastro de viagens</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="margin-right: 2vh; font-size: 1.2rem;" href="editar-viagem.html">Editar Viagens</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="margin-right: 2vh; font-size: 1.2rem;" href="#">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner Hero -->
+  <section class="banner-hero d-flex align-items-center text-white shadow"
+    style="background: url(./Assets/Banner1.png) center center/cover no-repeat; min-height: 60vh;">
+    <div class="container text-center">
+      <h1 class="display-4">Bem-vindo ao Guara Viagens</h1>
+      <p class="lead">Sua próxima aventura está aqui.</p>
+    </div>
+  </section>
+
+  <!-- Espaçamento -->
+  <div class="w-100 shadow" style="height: 2rem; background-color: rgb(78,86,131);"></div>
+
+  <!-- Seção de Viagens -->
+  <section id="proximas-viagens" class="container my-5">
+    <h2 class="text-center">Suas Viagens</h2>
+    <div id="viagens-list" class="row g-4">
+      <!-- Cartões das viagens serão renderizados aqui -->
+    </div>
+  </section>
+
+  <script>
+    function renderViagens(viagens) {
+      const viagensList = document.getElementById('viagens-list');
+      viagensList.innerHTML = '';
+      if (viagens.length === 0) {
+        viagensList.innerHTML = '<p class="text-center">Nenhuma viagem cadastrada.</p>';
+        return;
+      }
+      viagens.forEach(viagem => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        const card = document.createElement('div');
+        card.className = 'card h-100 shadow';
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${viagem.destino}</h5>
+            <p class="card-text">Data: ${new Date(viagem.data_viagem).toLocaleDateString('pt-BR')}</p>
+            <p class="card-text">Preço: R$ ${parseFloat(viagem.preco).toFixed(2)}</p>
+            <p class="card-text">Vagas: ${viagem.vagas}</p>
+          </div>
+          <div class="card-footer text-end">
+            <button class="btn btn-danger btn-sm cancel-btn" data-id="${viagem.id}">Cancelar Viagem</button>
+          </div>
+        `;
+        col.appendChild(card);
+        viagensList.appendChild(col);
+      });
+
+      document.querySelectorAll('.cancel-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const viagemId = this.getAttribute('data-id');
+          if(confirm('Tem certeza que deseja cancelar essa viagem?')) {
+            deleteViagem(viagemId);
+          }
+        });
+      });
+    }
+
+    function deleteViagem(id) {
+      const userId = localStorage.getItem('userId');
+      fetch(`http://localhost:3000/viagem/${id}/${userId}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        fetchViagens();
+      })
+      .catch(error => {
+        console.error('Erro ao cancelar viagem:', error);
+        alert('Erro ao cancelar viagem.');
+      });
+    }
+
+    function fetchViagens() {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+         document.getElementById('viagens-list').innerHTML = '<p class="text-center">Faça login para ver suas viagens.</p>';
+         return;
+      }
+      fetch('http://localhost:3000/viagens/' + userId)
+        .then(response => response.json())
+        .then(data => {
+            renderViagens(data);
+        })
+        .catch(error => console.error('Erro ao buscar viagens:', error));
+    }
+
+    fetchViagens();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
